@@ -1,0 +1,47 @@
+{
+    "name": "notice-test",
+    "version": "1.0.0",
+    "description": "浏览器测试",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "package": "electron-packager . btTest --win --out build --arch=x64 --version1.0.0 --overwrite --icon=static/images/128.ico",
+        "dist": "electron-builder --win --x64",
+        "win32": "electron-builder --win --ia32"
+    },
+    "repository": "https://github.com/electron/electron-quick-start",
+    "keywords": [
+        "Electron",
+        "quick",
+        "start",
+        "tutorial",
+        "demo"
+    ],
+    "author": "com.fst.cf",
+    "license": "CC0-1.0",
+    "devDependencies": {
+        "electron": "^4.0.7"
+    },
+    "dependencies": {
+        "electron-json-storage": "^4.1.6",
+        "regedit": "^3.0.2"
+    },
+    "build": {
+        "appId": "com.fst.cf.bro",
+        "copyright": "http://www.baidu.com",
+        "productName": "浏览器",
+        "mac": {
+            "target": [
+                "dmg",
+                "zip"
+            ]
+        },
+        "win": {
+            "target": [
+                "nsis",
+                "zip"
+            ],
+            "icon": "static/images/256.ico"
+        }
+    }
+}

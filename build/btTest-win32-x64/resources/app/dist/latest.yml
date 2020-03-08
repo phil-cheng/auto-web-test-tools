@@ -1,0 +1,8 @@
+version: 1.0.0
+files:
+  - url: notice-test-setup-1.0.0.exe
+    sha512: sFJd9orCo/t9w1cpdR1z/JS5X66hI9gQIvPSTnJIYA9goTBPToy0NfWgpWlr2sRlCtV+728OTJHzUzb0EruFkQ==
+    size: 43722368
+path: notice-test-setup-1.0.0.exe
+sha512: sFJd9orCo/t9w1cpdR1z/JS5X66hI9gQIvPSTnJIYA9goTBPToy0NfWgpWlr2sRlCtV+728OTJHzUzb0EruFkQ==
+releaseDate: '2020-03-06T19:57:24.621Z'

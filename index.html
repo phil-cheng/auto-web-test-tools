@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>配置</title>
+    <style>
+        ul li{
+            line-height: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <label>启动浏览器个数</label>
+        <input type="number" value="10" id="browserCount" />
+
+        <lable>子窗口内页面刷新间隔(秒)</lable>
+        <input type="number" value="6" id="childFreshInterval" />
+
+        <hr>
+        <ul class="url_container">
+            <li><label>A:</label><input type="url" name="a" id="a" style="width: 600px;" value="http://zxxy-elearning.examok.com/"/></li>
+            <li><label>B:</label><input type="url" name="b" id="b" style="width: 600px;" value="http://zxxy-elearning.examok.com/home!newscast.do"/></li>
+            <li><label>C:</label><input type="url" name="c" id="c" style="width: 600px;" value="http://zxxy-elearning.examok.com/home!courses.do"/></li>
+            <li><label>D:</label><input type="url" name="d" id="d" style="width: 600px;" value="http://zxxy-elearning.examok.com/home!teachers.do?roleId=10"/></li>
+            <li><label>E:</label><input type="url" name="e" id="e" style="width: 600px;" value="http://zxxy-elearning.examok.com/home!knowledges.do"/></li>
+            <li><label>F:</label><input type="url" name="f" id="f" style="width: 600px;" value="http://zxxy-elearning.examok.com/home!courses.do?groupId=657"/></li>
+            <li><label>G:</label><input type="url" name="g" id="g" style="width: 600px;" value="http://zxxy-elearning.examok.com/home!courses.do?groupId=757"/></li>
+        </ul>
+    </br>       
+        <button onclick="get_start()" style="width: 200px;">开始</button>
+    </div>
+
+    <script>
+        // 获取请求列表
+        function get_url_list(){
+            let return_array = [];
+            let a = document.getElementById("a").value;
+            let b = document.getElementById("b").value;
+            let c = document.getElementById("c").value;
+            let d = document.getElementById("d").value;
+            let e = document.getElementById("e").value;
+            let f = document.getElementById("f").value;
+            let g = document.getElementById("f").value;
+            if(a && CHECK_URL(a)){
+                return_array.push(a);
+            }
+            if(b && CHECK_URL(b)){
+                return_array.push(b);
+            }
+            if(c && CHECK_URL(c)){
+                return_array.push(c);
+            }
+            if(d && CHECK_URL(d)){
+                return_array.push(d);
+            }
+            if(e && CHECK_URL(e)){
+                return_array.push(e);
+            }
+            if(f && CHECK_URL(f)){
+                return_array.push(f);
+            }
+            if(g && CHECK_URL(g)){
+                return_array.push(g);
+            }
+            return return_array;
+        }
+
+        function get_start(){
+            debugger;
+            let browserCount = document.getElementById("browserCount").value;
+            // 启动浏览器个数
+            if(!browserCount || !(/(^[1-9]\d*$)/.test(browserCount)) || parseInt(browserCount)==0 ){
+                alert("启动浏览器个数只能输入非零正整数！");
+                return;
+            }
+           
+            // 刷新间隔验证
+            let childFreshInterval = document.getElementById("childFreshInterval").value;
+            if(!childFreshInterval || !(/(^[1-9]\d*$)/.test(childFreshInterval))|| parseInt(childFreshInterval)==0){
+                alert("刷新间隔只能输入非零正整数！");
+                return;
+            }
+
+            let url_list = get_url_list();
+            if(url_list && url_list.length > 0){
+                // 存储请求地址
+                require('electron').remote.getGlobal('saveDefault').url_list = url_list;
+                require('electron').remote.getGlobal('saveDefault').childFreshInterval = childFreshInterval;
+                // 打开窗口
+                for(let i=0; i < browserCount; i++){
+                    window.open("window.html");
+                }
+            }else{
+                alert("请输入有效的测试数据");
+            }
+        }
+
+        function CHECK_URL(url){
+            //url= 协议://(ftp的登录信息)[IP|域名](:端口号)(/或?请求参数)
+            var strRegex = '^((https|http|ftp)://)?'//(https或http或ftp):// 可有可无
+                + '(([\\w_!~*\'()\\.&=+$%-]+: )?[\\w_!~*\'()\\.&=+$%-]+@)?' //ftp的user@  可有可无
+                + '(([0-9]{1,3}\\.){3}[0-9]{1,3}' // IP形式的URL- 3位数字.3位数字.3位数字.3位数字
+                + '|' // 允许IP和DOMAIN（域名） 
+                + '(localhost)|'	//匹配localhost
+                + '([\\w_!~*\'()-]+\\.)*' // 域名- 至少一个[英文或数字_!~*\'()-]加上.
+                + '\\w+\\.' // 一级域名 -英文或数字  加上.
+                + '[a-zA-Z]{1,6})' // 顶级域名- 1-6位英文 
+                + '(:[0-9]{1,5})?' // 端口- :80 ,1-5位数字
+                + '((/?)|' // url无参数结尾 - 斜杆或这没有
+                + '(/[\\w_!~*\'()\\.;?:@&=+$,%#-]+)+/?)$';//请求参数结尾- 英文或数字和[]内的各种字符
+            
+            var strRegex1 = '^(?=^.{3,255}$)((http|https|ftp)?:\/\/)?(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/)?(?:\/(.+)\/?$)?(\/\w+\.\w+)*([\?&]\w+=\w*|[\u4e00-\u9fa5]+)*$';
+            var re=new RegExp(strRegex,'i');//i不区分大小写
+            //将url做uri转码后再匹配，解除请求参数中的中文和空字符影响
+            if (re.test(encodeURI(url))) {
+                return true;
+            } else {
+                return false;
+            }
+	    }
+    </script>
+</body>
+
+</html>

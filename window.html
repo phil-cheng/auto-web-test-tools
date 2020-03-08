@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试窗口</title>
+</head>
+<body onload="get_start()">
+    <!-- <iframe id="" width="100%", height="100%" frameBorder="0" src="www.baidu.com" scrolling="no"></iframe> -->
+    <webview id="foo" src="http://www.baidu.com" style="display:inline-flex; width:800px; height: 900px;"></webview>
+    <script>
+        let url_list = require('electron').remote.getGlobal('saveDefault').url_list;
+        let childFreshInterval = require('electron').remote.getGlobal('saveDefault').childFreshInterval;
+        
+        function get_start(){
+            if(url_list && url_list.length > 0){
+                setInterval(() => {
+                    refresh_page();
+               }, parseInt(childFreshInterval) * 1000)
+            }
+        }
+        function refresh_page(){
+            // 随机数
+            let random = parseInt(Math.random() * url_list.length, 10);
+            // window.location.href = url_list[random];
+            // let _iframe = document.getElementById('content_one');
+            // _iframe.src = url_list[random];
+
+            const webview = document.querySelector('webview');
+            webview.loadURL(url_list[random]);
+        }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>1</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <input type="number" value="50" id="num" />
+    </div>
+
+    <script>
+        const {
+            app,
+            BrowserWindow
+        } = require('electron')
+        alert(document.getElementById("num").value);
+
+        const win = new BrowserWindow({
+            width: 800,
+            height: 600,
+            webPreferences: {
+                nodeIntegration: true
+            }
+        })
+
+        win.loadUrl('www.baidu.com');
+
+        setTimeout('5000', function() {
+            win.close();
+        })
+    </script>
+</body>
+
+</html>

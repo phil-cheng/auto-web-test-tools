@@ -1,0 +1,16 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.fst.cf.bro
+copyright: 'http://www.baidu.com'
+productName: 浏览器
+mac:
+  target:
+    - dmg
+    - zip
+win:
+  target:
+    - nsis
+    - zip
+  icon: static/images/256.ico
+electronVersion: 4.0.7

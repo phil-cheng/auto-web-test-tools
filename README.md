@@ -5,7 +5,7 @@
 
 ```bash
 # Clone this repository
-git clone xxx
+git clone https://github.com/phil-cheng/auto-web-test-tools.git
 # Go into the repository
 cd auto-web-test-tools
 # Install dependencies

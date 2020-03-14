@@ -1,11 +1,11 @@
 {
-    "name": "notice-test",
+    "name": "auto-web-test-tools",
     "version": "1.0.0",
-    "description": "浏览器测试",
+    "description": "网页自动测试工具",
     "main": "main.js",
     "scripts": {
         "start": "electron .",
-        "package": "electron-packager . btTest --win --out build --arch=x64 --version1.0.0 --overwrite --icon=static/images/128.ico",
+        "package": "electron-packager . auto-web-test-tools --win --out build --arch=x64 --version1.0.0 --overwrite --icon=static/images/128.ico",
         "dist": "electron-builder --win --x64",
         "win32": "electron-builder --win --ia32"
     },
@@ -17,7 +17,7 @@
         "tutorial",
         "demo"
     ],
-    "author": "com.fst.cf",
+    "author": "com.chengfei.tools",
     "license": "CC0-1.0",
     "devDependencies": {
         "electron": "^4.0.7"
@@ -27,9 +27,9 @@
         "regedit": "^3.0.2"
     },
     "build": {
-        "appId": "com.fst.cf.bro",
-        "copyright": "http://www.baidu.com",
-        "productName": "btTest",
+        "appId": "com.phil.tools",
+        "copyright": "https://github.com/phil-cheng/auto-web-test-tools.git",
+        "productName": "网页自动测试工具",
         "mac": {
             "target": [
                 "dmg",

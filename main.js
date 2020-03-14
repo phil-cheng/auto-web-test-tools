@@ -1,3 +1,4 @@
+// auth phil
 const { app, BrowserWindow, ipcMain } = require('electron')
 
 // 主进程中在global上自定义对象
@@ -22,7 +23,13 @@ function createWindow() {
     })
 
     // 打开开发者工具
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow)
+
+
+// 关闭事件
+app.on('window-all-closed', function(){
+    app.quit();
+})

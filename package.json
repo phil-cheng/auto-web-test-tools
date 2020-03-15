@@ -1,6 +1,6 @@
 {
     "name": "auto-web-test-tools",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "网页自动测试工具",
     "main": "main.js",
     "scripts": {

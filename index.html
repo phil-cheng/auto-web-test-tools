@@ -15,39 +15,122 @@
             font-size: 12px;
             color: #666666;
         }
+        .top{
+            text-align: right;
+        }
+        .required_notice{
+            color: red;
+        }
     </style>
 </head>
 
-<body>
+<body onload="initPageDataFromStorage()">
     <div class="main">
-        <div class="opt">
-            <label>启动浏览器个数</label>
-            <input type="number" value="10" id="browserCount" />
+        <div class="top">
+            <button onclick="saveData()" title="使用自定义配置参数替换系统默认配置" >保存当前配置</button>
+            <button onclick="resetData()" >恢复默认配置</button>
         </div>
         <div class="opt">
-            <lable>子窗口内页面刷新间隔(秒)</lable>
-            <input type="number" value="6" id="childFreshInterval" />
+            <label><font class="required_notice">*</font>启动浏览器个数</label>
+            <input type="number" value="10" id="browserCount" required/>
         </div>
         <div class="opt">
-            <label>等待页url：</label><input type="url" name="wait_page" id="wait_page" style="width: 600px;" value="https://www.baidu.com" placeholder="url地址必须以http或https协议开头"/>
+            <lable><font class="required_notice">*</font>子窗口内页面刷新间隔(秒)</lable>
+            <input type="number" value="6" id="childFreshInterval" required/>
+        </div>
+        <div class="opt">
+            <label><font class="required_notice">*</font>等待页url：</label><input type="url" name="wait_page" id="wait_page" style="width: 600px;" value="" required placeholder="url地址必须以http或https协议开头"/>
         </div>
        
         <hr>
         <ul class="url_container">
-            <li><label>A:</label><input type="url" name="a" id="a" style="width: 600px;" value="http://sjdx-elearning.examok.com/"/></li>
-            <li><label>B:</label><input type="url" name="b" id="b" style="width: 600px;" value="http://sjdx-elearning.examok.com/home!newscast.do"/></li>
-            <li><label>C:</label><input type="url" name="c" id="c" style="width: 600px;" value="http://sjdx-elearning.examok.com/home!courses.do"/></li>
-            <li><label>D:</label><input type="url" name="d" id="d" style="width: 600px;" value="http://sjdx-elearning.examok.com/home!teachers.do?roleId=10"/></li>
-            <li><label>E:</label><input type="url" name="e" id="e" style="width: 600px;" value="http://sjdx-elearning.examok.com/home!knowledges.do"/></li>
-            <li><label>F:</label><input type="url" name="f" id="f" style="width: 600px;" value="http://sjdx-elearning.examok.com/home!courses.do?groupId=657"/></li>
-            <li><label>G:</label><input type="url" name="g" id="g" style="width: 600px;" value="http://sjdx-elearning.examok.com/home!courses.do?groupId=757"/></li>
+            <li><label><font class="required_notice">*</font>A:</label><input type="url" name="a" id="a" style="width: 600px;" value=""/></li>
+            <li><label>B:</label><input type="url" name="b" id="b" style="width: 600px;" value=""/></li>
+            <li><label>C:</label><input type="url" name="c" id="c" style="width: 600px;" value=""/></li>
+            <li><label>D:</label><input type="url" name="d" id="d" style="width: 600px;" value=""/></li>
+            <li><label>E:</label><input type="url" name="e" id="e" style="width: 600px;" value=""/></li>
+            <li><label>F:</label><input type="url" name="f" id="f" style="width: 600px;" value=""/></li>
+            <li><label>G:</label><input type="url" name="g" id="g" style="width: 600px;" value=""/></li>
             <li class="notice-text">注意：不合法的请求url将会被自动忽略</li>
         </ul>
-    </br>       
+        </br>       
         <button onclick="get_start()" style="width: 200px;">开始</button>
     </div>
 
     <script>
+        // 引入初始化参数
+        const defaultData = require("./data/data.json");
+        const storage = require('electron-json-storage');
+        console.log(storage.getDefaultDataPath());
+
+        // 从缓存初始化数据
+        function initPageDataFromStorage(){
+            storage.has('user_json', function(error, hasKey) {
+                if (error) throw error;
+                if (hasKey) {
+                    storage.get("user_json",function(error, data){
+                        if(error) throw error;
+                        if(data){
+                            dataInsert(data);
+                        }
+                    });
+                }else{
+                    initPageDataFromDefault();
+                }
+            });
+        }
+
+        // 从默认文件初始化数据
+        function initPageDataFromDefault(){
+            dataInsert(defaultData);
+        }
+
+        // 数据填充
+        function dataInsert(data){
+            if(data){
+                document.getElementById("browserCount").value = data.browserCount;
+                document.getElementById("childFreshInterval").value = data.childFreshInterval;
+                document.getElementById("wait_page").value = data.wait_page;
+                document.getElementById("a").value = data.a;
+                document.getElementById("b").value = data.b;
+                document.getElementById("c").value = data.c;
+                document.getElementById("d").value = data.d;
+                document.getElementById("e").value = data.e;
+                document.getElementById("f").value = data.f;
+                document.getElementById("g").value = data.g;
+            }
+        }
+
+        // 保存参数
+        function saveData(){
+            if(!check()){
+                return;
+            }
+            debugger;
+            console.log(document.getElementById("a").value);
+            let user_json = {
+                "browserCount":  document.getElementById("browserCount").value || 1,
+                "childFreshInterval":  document.getElementById("childFreshInterval").value || 10,
+                "wait_page":  document.getElementById("wait_page").value || "https://www.baidu.com",
+                "a":  document.getElementById("a").value || "",
+                "b":  document.getElementById("b").value || "",
+                "c":  document.getElementById("c").value || "",
+                "d":  document.getElementById("d").value || "",
+                "e":  document.getElementById("e").value || "",
+                "f":  document.getElementById("f").value || "",
+                "g":  document.getElementById("g").value || ""
+            }
+            storage.set('user_json', user_json, function(error){
+                alert("参数保存成功");
+            })
+        }
+
+        // 重置参数
+        function resetData(){
+            initPageDataFromDefault();
+            saveData();
+        }
+
         // 获取请求列表
         function get_url_list(){
             let return_array = [];
@@ -82,30 +165,87 @@
             return return_array;
         }
 
-        function get_start(){
+
+        // 格式检查
+        function check(){
             let browserCount = document.getElementById("browserCount").value;
             // 启动浏览器个数
             if(!browserCount || !(/(^[1-9]\d*$)/.test(browserCount)) || parseInt(browserCount)==0 ){
                 alert("启动浏览器个数只能输入非零正整数！");
-                return;
+                return false;
             }
            
             // 刷新间隔验证
             let childFreshInterval = document.getElementById("childFreshInterval").value;
             if(!childFreshInterval || !(/(^[1-9]\d*$)/.test(childFreshInterval))|| parseInt(childFreshInterval)==0){
                 alert("刷新间隔只能输入非零正整数！");
-                return;
+                return false;
             }
 
             // 等待页验证
             let wait_page = document.getElementById("wait_page").value;
             if(!wait_page || !CHECK_URL(wait_page)){
                 alert("等待页url路径不合法！");
+                return false;
+            }
+
+            let a = document.getElementById("a").value;
+            if(!a || !CHECK_URL(a)){
+                alert("A:url路径不合法！");
+                return false;
+            }
+
+            let b = document.getElementById("b").value;
+            if(b && !CHECK_URL(b)){
+                alert("B:url路径不合法！");
+                return false;
+            }
+
+            let c = document.getElementById("c").value;
+            if(c && !CHECK_URL(c)){
+                alert("C:url路径不合法！");
+                return false;
+            }
+
+            let d = document.getElementById("d").value;
+            if(d && !CHECK_URL(d)){
+                alert("D:url路径不合法！");
+                return false;
+            }
+
+            let e = document.getElementById("e").value;
+            if(e && !CHECK_URL(e)){
+                alert("E:url路径不合法！");
+                return false;
+            }
+
+            let f = document.getElementById("f").value;
+            if(f && !CHECK_URL(f)){
+                alert("F:url路径不合法！");
+                return false;
+            }
+
+            let g = document.getElementById("g").value;
+            if(g && !CHECK_URL(g)){
+                alert("G:url路径不合法！");
+                return false;
+            }
+
+            return true;
+        }
+
+
+        function get_start(){
+            if(!check()){
                 return;
             }
 
             let url_list = get_url_list();
             if(url_list && url_list.length > 0){
+                let browserCount = document.getElementById("browserCount").value;
+                let childFreshInterval = document.getElementById("childFreshInterval").value;
+                let wait_page = document.getElementById("wait_page").value;
+
                 // 存储请求地址
                 require('electron').remote.getGlobal('saveDefault').url_list = url_list;
                 require('electron').remote.getGlobal('saveDefault').childFreshInterval = childFreshInterval;

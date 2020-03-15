@@ -1,4 +1,12 @@
 {
-    "name": "phil",
-    "date": "20200314"
+    "browserCount": 10,
+    "childFreshInterval": 6,
+    "wait_page": "https://www.baidu.com",
+    "a": "http://sjdx-elearning.examok.com",
+    "b": "http://sjdx-elearning.examok.com/home!newscast.do",
+    "c": "http://sjdx-elearning.examok.com/home!courses.do",
+    "d": "http://sjdx-elearning.examok.com/home!teachers.do?roleId=10",
+    "e": "http://sjdx-elearning.examok.com/home!knowledges.do",
+    "f": "http://sjdx-elearning.examok.com/home!courses.do?groupId=657",
+    "g": "http://sjdx-elearning.examok.com/home!courses.do?groupId=757"
 }

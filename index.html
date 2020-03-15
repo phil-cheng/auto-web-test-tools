@@ -8,17 +8,30 @@
         ul li{
             line-height: 40px;
         }
+        .opt{
+            margin: 10px 5px;
+        }
+        .notice-text{
+            font-size: 12px;
+            color: #666666;
+        }
     </style>
 </head>
 
 <body>
     <div class="main">
-        <label>启动浏览器个数</label>
-        <input type="number" value="10" id="browserCount" />
-
-        <lable>子窗口内页面刷新间隔(秒)</lable>
-        <input type="number" value="6" id="childFreshInterval" />
-
+        <div class="opt">
+            <label>启动浏览器个数</label>
+            <input type="number" value="10" id="browserCount" />
+        </div>
+        <div class="opt">
+            <lable>子窗口内页面刷新间隔(秒)</lable>
+            <input type="number" value="6" id="childFreshInterval" />
+        </div>
+        <div class="opt">
+            <label>等待页url：</label><input type="url" name="wait_page" id="wait_page" style="width: 600px;" value="https://www.baidu.com" placeholder="url地址必须以http或https协议开头"/>
+        </div>
+       
         <hr>
         <ul class="url_container">
             <li><label>A:</label><input type="url" name="a" id="a" style="width: 600px;" value="http://sjdx-elearning.examok.com/"/></li>
@@ -28,6 +41,7 @@
             <li><label>E:</label><input type="url" name="e" id="e" style="width: 600px;" value="http://sjdx-elearning.examok.com/home!knowledges.do"/></li>
             <li><label>F:</label><input type="url" name="f" id="f" style="width: 600px;" value="http://sjdx-elearning.examok.com/home!courses.do?groupId=657"/></li>
             <li><label>G:</label><input type="url" name="g" id="g" style="width: 600px;" value="http://sjdx-elearning.examok.com/home!courses.do?groupId=757"/></li>
+            <li class="notice-text">注意：不合法的请求url将会被自动忽略</li>
         </ul>
     </br>       
         <button onclick="get_start()" style="width: 200px;">开始</button>
@@ -69,7 +83,6 @@
         }
 
         function get_start(){
-            debugger;
             let browserCount = document.getElementById("browserCount").value;
             // 启动浏览器个数
             if(!browserCount || !(/(^[1-9]\d*$)/.test(browserCount)) || parseInt(browserCount)==0 ){
@@ -84,11 +97,20 @@
                 return;
             }
 
+            // 等待页验证
+            let wait_page = document.getElementById("wait_page").value;
+            if(!wait_page || !CHECK_URL(wait_page)){
+                alert("等待页url路径不合法！");
+                return;
+            }
+
             let url_list = get_url_list();
             if(url_list && url_list.length > 0){
                 // 存储请求地址
                 require('electron').remote.getGlobal('saveDefault').url_list = url_list;
                 require('electron').remote.getGlobal('saveDefault').childFreshInterval = childFreshInterval;
+                require('electron').remote.getGlobal('saveDefault').wait_page = wait_page;
+                
                 // 打开窗口
                 for(let i=0; i < browserCount; i++){
                     window.open("window.html");
@@ -112,7 +134,7 @@
                 + '((/?)|' // url无参数结尾 - 斜杆或这没有
                 + '(/[\\w_!~*\'()\\.;?:@&=+$,%#-]+)+/?)$';//请求参数结尾- 英文或数字和[]内的各种字符
             
-            var strRegex1 = '^(?=^.{3,255}$)((http|https|ftp)?:\/\/)?(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/)?(?:\/(.+)\/?$)?(\/\w+\.\w+)*([\?&]\w+=\w*|[\u4e00-\u9fa5]+)*$';
+            // var strRegex1 = '^(?=^.{3,255}$)((http|https|ftp)?:\/\/)?(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/)?(?:\/(.+)\/?$)?(\/\w+\.\w+)*([\?&]\w+=\w*|[\u4e00-\u9fa5]+)*$';
             var re=new RegExp(strRegex,'i');//i不区分大小写
             //将url做uri转码后再匹配，解除请求参数中的中文和空字符影响
             if (re.test(encodeURI(url))) {

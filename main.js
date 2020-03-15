@@ -4,7 +4,8 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 // 主进程中在global上自定义对象
 global.saveDefault= {
     url_list: [],
-    childFreshInterval: 6
+    childFreshInterval: 6,
+    wait_page: ""
 }  
 
 function createWindow() {

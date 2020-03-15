@@ -7,26 +7,33 @@
 </head>
 <body onload="get_start()">
     <!-- <iframe id="" width="100%", height="100%" frameBorder="0" src="www.baidu.com" scrolling="no"></iframe> -->
-    <webview id="foo" src="http://www.baidu.com" style="display:inline-flex; width:800px; height: 900px;"></webview>
+    <div>当前网页Title:<span id="child_title">加载中....</span></div>
+    <webview id="foo" src="" style="display:inline-flex; width:800px; height: 900px;"></webview>
     <script>
         let url_list = require('electron').remote.getGlobal('saveDefault').url_list;
         let childFreshInterval = require('electron').remote.getGlobal('saveDefault').childFreshInterval;
-        
+        let wait_page = require('electron').remote.getGlobal('saveDefault').wait_page;
+
         function get_start(){
+            // 设置等待页
+            document.getElementById("foo").src = wait_page;
+            
+            // 加入定时任务
+            const webview = document.querySelector('webview');
             if(url_list && url_list.length > 0){
                 setInterval(() => {
-                    refresh_page();
+                    refresh_page(webview);
                }, parseInt(childFreshInterval) * 1000)
             }
+
+            // 绑定事件，展示Tile内容
+            webview.addEventListener('did-finish-load', function(e) {
+                document.getElementById("child_title").innerText = webview.getTitle();
+            });
         }
-        function refresh_page(){
+        function refresh_page(webview){
             // 随机数
             let random = parseInt(Math.random() * url_list.length, 10);
-            // window.location.href = url_list[random];
-            // let _iframe = document.getElementById('content_one');
-            // _iframe.src = url_list[random];
-
-            const webview = document.querySelector('webview');
             webview.loadURL(url_list[random]);
         }
     </script>

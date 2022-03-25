@@ -20,7 +20,7 @@
     "author": "com.chengfei.tools",
     "license": "CC0-1.0",
     "devDependencies": {
-        "electron": "^4.0.7"
+        "electron": "^13.6.6"
     },
     "dependencies": {
         "electron-json-storage": "^4.1.6",
